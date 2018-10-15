@@ -8,7 +8,8 @@ var Rover = {
   travelLog: [["N",0,0]],
 }
 
-var fieldSize = [9,9] // Actual size is one whole number higher due to counting number 0. I.e.: size 10x10 --> [9,9]
+var fieldSize = [3,5] // Actual size is one whole number higher due to counting number 0. I.e.: size 10x10 --> [9,9]
+var field=[];
 // ======================
 
 function showInstructions(){
@@ -18,6 +19,39 @@ function showInstructions(){
   "--chainMoves(string) ,where: \n\n\t\tf:moveForward \n\t\tb:moveBackward \n\t\tr:turnRight \n\t\tl:turnLeft" +
   "\n\t\tExample: chainMoves(\"rrffflffrbblff\")" +
   "\n\n\tHave Fun!")
+}
+
+function createField(fSize) {
+  
+  //First, we create the standard columns (second parameter of the array = coordinate y).
+  var col = [];
+  for (i=0; i<=fSize[1]; i++) {
+    col.push("_");
+  }
+  //Then the columns are added up to compose a matrix with our desired field size.
+  for(j=0; j<=fSize[0]; j++) {
+    field.push(col);
+  }
+
+  var outputMat1 = "";
+  for (t=0; t<= fSize[1]; t++) {
+    outputMat1 += "[";
+    for (s=0; s<= fSize[0]; s++){
+      outputMat1 += " " + s + "," + t ;
+    }
+    outputMat1 += " ]\n";
+  }
+
+  var outputMat2 = "";
+  for (t=0; t<= fSize[1]; t++) {
+    outputMat2 += "[";
+    for (s=0; s<= fSize[0]; s++){
+      outputMat2 += " " + field[s][t] ;
+    }
+    outputMat2 += " ]\n";
+  }
+
+  console.log("field created:\n" + outputMat1 + "\n" + outputMat2);
 }
 
 function turnRight(rover){
@@ -64,7 +98,7 @@ function turnLeft(rover){
 
 function checkLimits(axis, sense, lowerLimit, upperLimit) {
   /* This functions takes the movement axis and a boolean parameter for the sense of movement: True = forward or False = backward.
-     Then, both the upper and lower limits of the grid must be given.
+     Then, both the upper and lower limits of the grid must be given (i.e.: 0 and 9).
      It returns true if a limit has been reached.*/
   
   if (sense == true) {
