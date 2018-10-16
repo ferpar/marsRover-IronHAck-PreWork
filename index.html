@@ -4,12 +4,31 @@
   <meta charset="UTF-8">
   <title>Mars Rover</title>
   <script src="javascripts/app.js"></script>
+  <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
   <h1>MArs Rover v3</h1>
   <p>Please, type showInstructions() in the console for a list of available commands.</p>
   <hr>
-  <p id="playing-field"></p>
+
+  <form>
+    <label>Insert field Size:</label>
+    <label>X</label>
+    <input id="x-input" type="number" style="width:30px" value="4">
+    <label>Y</label>
+    <input id="y-input" type="number" style="width:30px" value="6">
+    <input type="button" value="Start!" onclick="createFieldButton()">
+  </form>
+
+  <div id="field-container">
+    <p id="playing-field"></p>
+  </div>
   
+  <div id="controls">
+    <button id="forward-btn" value="W" onclick="moveForward(Rover)">W</button>
+    <button id="left-btn" value="A" onclick="turnLeft(Rover)">A</button>
+    <button id="backward-btn" value="S" onclick="moveBackward(Rover)">S</button>
+    <button id="right-btn" value="D" onclick="turnRight(Rover)">D</button>
+  </div>
 </body>
 </html>

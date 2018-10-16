@@ -10,6 +10,8 @@ var Rover = {
 
 var fieldSize = [3,5] // Actual size is one whole number higher due to counting number 0. I.e.: size 10x10 --> [9,9]
 var field=[];
+
+var consoleLogSwitch = false;
 // ======================
 
 function showInstructions(){
@@ -18,6 +20,8 @@ function showInstructions(){
   "--turnRight(Rover)\n\n\t--moveForward(Rover)\n\t--moveBackward(Rover)\n\n\t" + 
   "--chainMoves(string) ,where: \n\n\t\tf:moveForward \n\t\tb:moveBackward \n\t\tr:turnRight \n\t\tl:turnLeft" +
   "\n\t\tExample: chainMoves(\"rrffflffrbblff\")" +
+  "\n\nYou may change the size of the playing field by editing the fieldSize[x-1, y-1] array." +
+  "\n\n\t i.e.: type fieldSize = [5, 3] for a 6x4 field." +
   "\n\n\tHave Fun!")
 }
 
@@ -29,31 +33,34 @@ function renderField(fSize) {
     col.push("_");
   }
   //Then the columns are added up to compose a matrix with our desired field size.
+  field = []
   for(j=0; j<=fSize[0]; j++) {
     field.push(col.slice(0));
   }
 
   // Here the position of the Rover will be rendered on the field.
   // ===========================
-    field[Rover.x][Rover.y] = "<u>R</u>"
+    field[Rover.x][Rover.y] = "<u>" + Rover.direction + "</u>";
   // ===========================
-
-  var outputMat1 = "";
-  for (t=0; t<= fSize[1]; t++) {
-    outputMat1 += "[";
-    for (s=0; s<= fSize[0]; s++){
-      outputMat1 += " " + s + "," + t ;
+  
+  if (consoleLogSwitch) {
+    var outputMat1 = "";
+    for (t=0; t<= fSize[1]; t++) {
+      outputMat1 += "[";
+      for (s=0; s<= fSize[0]; s++){
+        outputMat1 += " " + s + "," + t ;
+      }
+      outputMat1 += " ]\n";
     }
-    outputMat1 += " ]\n";
-  }
 
-  var outputMat2 = "";
-  for (t=0; t<= fSize[1]; t++) {
-    outputMat2 += "[";
-    for (s=0; s<= fSize[0]; s++){
-      outputMat2 += " " + field[s][t] ;
+    var outputMat2 = "";
+    for (t=0; t<= fSize[1]; t++) {
+      outputMat2 += "[";
+      for (s=0; s<= fSize[0]; s++){
+        outputMat2 += " " + field[s][t] ;
+      }
+      outputMat2 += " ]\n";
     }
-    outputMat2 += " ]\n";
   }
 
   var outputMat3 = "";
@@ -65,7 +72,12 @@ function renderField(fSize) {
     outputMat3 += " ]<br>";
   }
 
-  console.log("field created:\n" + outputMat1 + "\n" + outputMat2);
+  if (consoleLogSwitch) { 
+    console.log("field created:\n" + outputMat1 + "\n" + outputMat2);
+  } 
+  else {
+    console.log("field rendered");
+  }
 
   document.getElementById("playing-field").innerHTML = outputMat3;
 }
@@ -75,15 +87,19 @@ function turnRight(rover){
   switch (rover["direction"]) {
     case "N":
       Rover["direction"] = "E";
+      renderField(fieldSize);
       break;
     case "E":
       Rover["direction"] = "S";
+      renderField(fieldSize);
       break;
     case "S":
-      Rover["direction"] = "W"
+      Rover["direction"] = "W";
+      renderField(fieldSize);
       break;
     case "W":
-      Rover["direction"] = "N"
+      Rover["direction"] = "N";
+      renderField(fieldSize);
       break;
   }
 
@@ -96,15 +112,19 @@ function turnLeft(rover){
   switch (rover["direction"]) {
     case "N":
       Rover["direction"] = "W";
+      renderField(fieldSize);
       break;
     case "E":
       Rover["direction"] = "N";
+      renderField(fieldSize);
       break;
     case "S":
-      Rover["direction"] = "E"
+      Rover["direction"] = "E";
+      renderField(fieldSize);
       break;
     case "W":
-      Rover["direction"] = "S"
+      Rover["direction"] = "S";
+      renderField(fieldSize);
       break;
   }
 
@@ -164,16 +184,24 @@ function moveForward(rover){
 
   switch (rover["direction"]) {
     case "N":
-      Rover["y"] -= 1;
+      field[Rover.x][Rover.y] = "_";
+      Rover["y"] -= 1;      
+      renderField(fieldSize);
       break;
     case "E":
+      field[Rover.x][Rover.y] = "_";
       Rover["x"] += 1;
+      renderField(fieldSize);
       break;
     case "S":
+      field[Rover.x][Rover.y] = "_";
       Rover["y"] += 1;
+      renderField(fieldSize);
       break;
     case "W":
+      field[Rover.x][Rover.y] = "_";
       Rover["x"] -= 1;
+      renderField(fieldSize);
       break;
   }
   
@@ -195,16 +223,24 @@ function moveBackward(rover){
   
   switch (rover["direction"]) {
     case "N":
+      field[Rover.x][Rover.y] = "_";
       Rover["y"] += 1;
+      renderField(fieldSize);
       break;
     case "E":
+      field[Rover.x][Rover.y] = "_";
       Rover["x"] -= 1;
+      renderField(fieldSize);
       break;
     case "S":
+      field[Rover.x][Rover.y] = "_";
       Rover["y"] -= 1;
+      renderField(fieldSize);
       break;
     case "W":
+      field[Rover.x][Rover.y] = "_";
       Rover["x"] += 1;
+      renderField(fieldSize);
       break;
   }
   
@@ -241,3 +277,30 @@ function chainMoves(moves) {
     console.log(entry);
   })
 }
+
+function createFieldButton() {
+  fieldSize[0] = document.getElementById("x-input").value -1;
+  fieldSize[1] = document.getElementById("y-input").value -1;
+  renderField(fieldSize);
+}
+
+/*function textsizer(e){
+  var evtobj=window.event? event : e //distinguish between IE's explicit event object (window.event) and Firefox's implicit.
+  var unicode=evtobj.charCode? evtobj.charCode : evtobj.keyCode
+  var actualkey=String.fromCharCode(unicode)
+
+  switch (actualkey) {
+    case "w":
+      moveForward(Rover);
+      break;
+    case "s":
+      moveBackward(Rover);
+      break;
+    case "a":
+      turnLeft(Rover);
+      break;
+    case "d":
+      turnRight(Rover);
+      break;
+  }
+}*/

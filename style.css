@@ -1,0 +1,34 @@
+#defloat {
+    clear:both;
+}
+
+#forward-btn {
+    position: relative;
+    left: 68px;
+    width:30px;
+    text-align: center;
+}
+
+#left-btn {
+    position: relative;
+    left: 0px;
+    top: 25px;
+    width: 30px;
+    text-align: center;
+}
+
+#backward-btn {
+    position: relative;
+    left: 0px;
+    top: 25px;
+    width: 30px;
+    text-align: center;
+}
+
+#right-btn {
+    position: relative;
+    left: 0px;
+    top: 25px;
+    width: 30px;
+    text-align: center;
+}
