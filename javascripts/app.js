@@ -21,7 +21,7 @@ function showInstructions(){
   "\n\n\tHave Fun!")
 }
 
-function createField(fSize) {
+function renderField(fSize) {
   
   //First, we create the standard columns (second parameter of the array = coordinate y).
   var col = [];
@@ -30,8 +30,13 @@ function createField(fSize) {
   }
   //Then the columns are added up to compose a matrix with our desired field size.
   for(j=0; j<=fSize[0]; j++) {
-    field.push(col);
+    field.push(col.slice(0));
   }
+
+  // Here the position of the Rover will be rendered on the field.
+  // ===========================
+    field[Rover.x][Rover.y] = "<u>R</u>"
+  // ===========================
 
   var outputMat1 = "";
   for (t=0; t<= fSize[1]; t++) {
@@ -51,7 +56,18 @@ function createField(fSize) {
     outputMat2 += " ]\n";
   }
 
+  var outputMat3 = "";
+  for (t=0; t<= fSize[1]; t++) {
+    outputMat3 += "[";
+    for (s=0; s<= fSize[0]; s++){
+      outputMat3 += " " + field[s][t] ;
+    }
+    outputMat3 += " ]<br>";
+  }
+
   console.log("field created:\n" + outputMat1 + "\n" + outputMat2);
+
+  document.getElementById("playing-field").innerHTML = outputMat3;
 }
 
 function turnRight(rover){
