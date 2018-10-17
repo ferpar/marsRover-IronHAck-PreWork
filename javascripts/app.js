@@ -25,20 +25,66 @@ function showInstructions(){
   "\n\n\tHave Fun!")
 }
 
-function renderField(fSize) {
+function createField(fSize) {
   
   //First, we create the standard columns (second parameter of the array = coordinate y).
   var col = [];
   for (i=0; i<=fSize[1]; i++) {
     col.push("_");
   }
-  //Then the columns are added up to compose a matrix with our desired field size.
+  //Then the columns are added up to compose a matrix with our desired field size. (.slice() method use to avoid passing columns by reference)
   field = []
   for(j=0; j<=fSize[0]; j++) {
     field.push(col.slice(0));
   }
 
   // Here the position of the Rover will be rendered on the field.
+  // ===========================
+    field[Rover.x][Rover.y] = "<u>" + Rover.direction + "</u>";
+  // ===========================
+  
+  if (consoleLogSwitch) {
+    var outputMat1 = "";
+    for (t=0; t<= fSize[1]; t++) {
+      outputMat1 += "[";
+      for (s=0; s<= fSize[0]; s++){
+        outputMat1 += " " + s + "," + t ;
+      }
+      outputMat1 += " ]\n";
+    }
+
+    var outputMat2 = "";
+    for (t=0; t<= fSize[1]; t++) {
+      outputMat2 += "[";
+      for (s=0; s<= fSize[0]; s++){
+        outputMat2 += " " + field[s][t] ;
+      }
+      outputMat2 += " ]\n";
+    }
+  }
+
+  var outputMat3 = "";
+  for (t=0; t<= fSize[1]; t++) {
+    outputMat3 += "[";
+    for (s=0; s<= fSize[0]; s++){
+      outputMat3 += " " + field[s][t] ;
+    }
+    outputMat3 += " ]<br>";
+  }
+
+  if (consoleLogSwitch) { 
+    console.log("field created:\n" + outputMat1 + "\n" + outputMat2);
+  } 
+  else {
+    console.log("field created and rendered");
+  }
+
+  document.getElementById("playing-field").innerHTML = outputMat3;
+}
+
+function renderField(fSize) {
+  
+    // Here the position of the Rover will be rendered on the field.
   // ===========================
     field[Rover.x][Rover.y] = "<u>" + Rover.direction + "</u>";
   // ===========================
@@ -281,24 +327,31 @@ function chainMoves(moves) {
 function createFieldButton() {
   fieldSize[0] = document.getElementById("x-input").value -1;
   fieldSize[1] = document.getElementById("y-input").value -1;
-  renderField(fieldSize);
+  createField(fieldSize);
 }
 
-function keyListener(e) {
+function keyListener() {
   var key = event.key;
 
   switch (key) {
     case "w":
+    case "ArrowUp":
       moveForward(Rover);
       break;
     case "s":
+    case "ArrowDown":
       moveBackward(Rover);
       break;
     case "a":
+    case "ArrowLeft":
       turnLeft(Rover);
       break;
     case "d":
+    case "ArrowRight":
       turnRight(Rover);
+      break;
+    case "Enter":
+      createFieldButton();
       break;
   }
 }

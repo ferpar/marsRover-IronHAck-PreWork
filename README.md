@@ -9,7 +9,23 @@ Exercise Status:
     -Bonus - Moving Backwards           complete    No
     -Bonus - Validate Inputs            complete    No
 
-    -Bonus - Obstacles                  not begun
+    -Extra - separate matrix creation      
+            from rendering.             complete
+
+    -Bonus - Obstacles (randomize)      not begun
     -Bonus - Other Rovers               not begun
 
-If time allows, adding some kind of graphics / interface in place of the barebones html would be fine.
+    -Extra - Graphical Display          text-based
+    -Extra - UI Controls                complete
+    -Extra - Key controls "wasd"        complete
+
+Game concepts:
+
+    -Achieve goals in a limited time
+        --> Possibly pickup certain items ala "Packman"
+
+    Multiplayer: 
+        a) Second player needs to intercept first one before achieving said goal (controls other than wasd)
+            --> Modify abilities of each role to make for a more engaging experience
+        b) Players must beat each other at picking up the most items
+            --> Bots "trying to intercept" players could be added
