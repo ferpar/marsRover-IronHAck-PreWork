@@ -1,3 +1,9 @@
+body {
+    background: url(images/ground-mars-wallpapers.jpg);
+    padding-top: 20px;
+    color: hsl(131,91%,44%);
+}
+
 #defloat {
     clear:both;
 }
