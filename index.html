@@ -8,17 +8,32 @@
 </head>
 <body onkeydown="keyListener()">
   <h1>MArs Rover v3</h1>
-  <p>Please, type showInstructions() in the console for a list of available commands.</p>
-  <hr>
-
+  <p>
+    Press Enter to start with default settings.<br><br>
+    Use "wsad" or the arrow keys to move forward/backward and turn the Rover.
+  </p>
+  
   <form>
-    <label>Insert field Size:</label>
-    <label>X</label>
-    <input id="x-input" type="number" style="width:30px" value="4">
-    <label>Y</label>
-    <input id="y-input" type="number" style="width:30px" value="6">
-    <input type="button" value="Start!" onclick="createFieldButton()">
+    <fieldset style="width:50%;">
+
+      <legend>Game settings:</legend>
+
+      <label for="obst-num">Obstacle number</label>
+      <input id=obst-num type="number" style="width:30px" value="5">  
+      
+      <br><br>
+      <label for="x-input">X</label>
+      <input id="x-input" type="number" style="width:30px" value="4">
+      <label for="y-input">Y</label>
+      <input id="y-input" type="number" style="width:30px" value="6">
+      <input type="button" value="Start!" onclick="createFieldButton()">
+
+    </fieldset>
+    <br>
+    
   </form>
+
+  <hr>
 
   <div id="field-container">
     <p id="playing-field"></p>

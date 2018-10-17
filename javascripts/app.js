@@ -10,6 +10,7 @@ var Rover = {
 
 var fieldSize = [3,5] // Actual size is one whole number higher due to counting number 0. I.e.: size 10x10 --> [9,9]
 var field=[];
+var obstacleNumber;
 
 var consoleLogSwitch = false;
 // ======================
@@ -23,6 +24,20 @@ function showInstructions(){
   "\n\nYou may change the size of the playing field by editing the fieldSize[x-1, y-1] array." +
   "\n\n\t i.e.: type fieldSize = [5, 3] for a 6x4 field." +
   "\n\n\tHave Fun!")
+}
+
+function createObstacles(obstacleNum) {
+  var obstX;
+  var obstY;
+
+  for (i=0; i<obstacleNum; i++) {
+    do {
+    obstX = Math.floor(Math.random()*(fieldSize[0]+1));
+    obstY = Math.floor(Math.random()*(fieldSize[1]+1));
+    } while (obstX == Rover.x && obstY == Rover.y || field[obstX][obstY] == "X")
+    field[obstX][obstY] = "X";
+    console.log("Obstacle " +(i+1) + " coordinates: " + obstX + ", " + obstY + "\n")
+  }
 }
 
 function createField(fSize) {
@@ -42,6 +57,8 @@ function createField(fSize) {
   // ===========================
     field[Rover.x][Rover.y] = "<u>" + Rover.direction + "</u>";
   // ===========================
+
+  createObstacles(document.getElementById("obst-num").value);
   
   if (consoleLogSwitch) {
     var outputMat1 = "";
@@ -216,6 +233,34 @@ function checkLimits(axis, sense, lowerLimit, upperLimit) {
   } 
 }
 
+function checkObstacles(dir, sense) {
+  // parameters: --dir: string containing "N","E","S" or "W". --sense: boolean true --> forward sense.
+
+  if (sense) {
+    switch (dir) {
+      case "N":
+        return field[Rover.x][Rover.y-1]=="X" ? true : false;
+      case "E":
+        return field[Rover.x+1][Rover.y]=="X" ? true : false;
+      case "S":
+        return field[Rover.x][Rover.y+1]=="X" ? true : false;
+      case "W":
+        return field[Rover.x-1][Rover.y]=="X" ? true : false;
+    }
+  } else {
+    switch (dir) {
+      case "N":
+        return field[Rover.x][Rover.y+1]=="X" ? true : false;
+      case "E":
+        return field[Rover.x-1][Rover.y]=="X" ? true : false;
+      case "S":
+        return field[Rover.x][Rover.y-1]=="X" ? true : false;
+      case "W":
+        return field[Rover.x+1][Rover.y]=="X" ? true : false;
+    }
+  }
+}
+
 function moveForward(rover){
 
   if (rover["direction"]=="W" || rover["direction"]=="E") {
@@ -230,24 +275,40 @@ function moveForward(rover){
 
   switch (rover["direction"]) {
     case "N":
-      field[Rover.x][Rover.y] = "_";
-      Rover["y"] -= 1;      
-      renderField(fieldSize);
+      if (!checkObstacles("N",true)){
+        field[Rover.x][Rover.y] = "_";
+        Rover["y"] -= 1;      
+        renderField(fieldSize);
+      } else {
+        console.log("cannot move forward: obstacle ahead");
+      }
       break;
     case "E":
-      field[Rover.x][Rover.y] = "_";
-      Rover["x"] += 1;
-      renderField(fieldSize);
+      if (!checkObstacles("E",true)){
+        field[Rover.x][Rover.y] = "_";
+        Rover["x"] += 1;
+        renderField(fieldSize);
+      } else {
+        console.log("cannot move forward: obstacle ahead");
+      }
       break;
     case "S":
-      field[Rover.x][Rover.y] = "_";
-      Rover["y"] += 1;
-      renderField(fieldSize);
+      if (!checkObstacles("S",true)){
+        field[Rover.x][Rover.y] = "_";
+        Rover["y"] += 1;
+        renderField(fieldSize);
+      } else {
+        console.log("cannot move forward: obstacle ahead");
+      }
       break;
     case "W":
-      field[Rover.x][Rover.y] = "_";
-      Rover["x"] -= 1;
-      renderField(fieldSize);
+      if (!checkObstacles("W",true)){
+        field[Rover.x][Rover.y] = "_";
+        Rover["x"] -= 1;
+        renderField(fieldSize);
+      } else {
+        console.log("cannot move forward: obstacle ahead");
+      }
       break;
   }
   
@@ -269,24 +330,40 @@ function moveBackward(rover){
   
   switch (rover["direction"]) {
     case "N":
-      field[Rover.x][Rover.y] = "_";
-      Rover["y"] += 1;
-      renderField(fieldSize);
+      if (!checkObstacles("N",false)){
+        field[Rover.x][Rover.y] = "_";
+        Rover["y"] += 1;
+        renderField(fieldSize);
+      } else {
+        console.log("cannot move rearwards: obstacle behind");
+      }
       break;
     case "E":
-      field[Rover.x][Rover.y] = "_";
-      Rover["x"] -= 1;
-      renderField(fieldSize);
+      if (!checkObstacles("E",false)){
+        field[Rover.x][Rover.y] = "_";
+        Rover["x"] -= 1;
+        renderField(fieldSize);
+      } else {
+        console.log("cannot move rearwards: obstacle behind");
+      }
       break;
     case "S":
-      field[Rover.x][Rover.y] = "_";
-      Rover["y"] -= 1;
-      renderField(fieldSize);
+      if (!checkObstacles("S",false)){
+        field[Rover.x][Rover.y] = "_";
+        Rover["y"] -= 1;
+        renderField(fieldSize);
+      } else {
+        console.log("cannot move rearwards: obstacle behind");
+      }
       break;
     case "W":
+    if (!checkObstacles("W",false)){
       field[Rover.x][Rover.y] = "_";
       Rover["x"] += 1;
       renderField(fieldSize);
+    } else {
+      console.log("cannot move rearwards: obstacle behind");
+    }      
       break;
   }
   

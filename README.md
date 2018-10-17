@@ -12,7 +12,7 @@ Exercise Status:
     -Extra - separate matrix creation      
             from rendering.             complete
 
-    -Bonus - Obstacles (randomize)      not begun
+    -Bonus - Obstacles (randomize)      complete
     -Bonus - Other Rovers               not begun
 
     -Extra - Graphical Display          text-based
