@@ -284,12 +284,10 @@ function createFieldButton() {
   renderField(fieldSize);
 }
 
-/*function textsizer(e){
-  var evtobj=window.event? event : e //distinguish between IE's explicit event object (window.event) and Firefox's implicit.
-  var unicode=evtobj.charCode? evtobj.charCode : evtobj.keyCode
-  var actualkey=String.fromCharCode(unicode)
+function keyListener(e) {
+  var key = event.key;
 
-  switch (actualkey) {
+  switch (key) {
     case "w":
       moveForward(Rover);
       break;
@@ -303,4 +301,4 @@ function createFieldButton() {
       turnRight(Rover);
       break;
   }
-}*/
+}
