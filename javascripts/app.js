@@ -8,6 +8,13 @@ var Rover = {
   travelLog: [["N",0,0]],
 }
 
+var Rover2 = {
+  direction: "N",
+  x: 1,
+  y: 0,
+  travelLog: [["N",0,0]],
+}
+
 var fieldSize = [3,5] // Actual size is one whole number higher due to counting number 0. I.e.: size 10x10 --> [9,9]
 var field=[];
 var obstacleNumber;
@@ -34,10 +41,37 @@ function createObstacles(obstacleNum) {
     do {
     obstX = Math.floor(Math.random()*(fieldSize[0]+1));
     obstY = Math.floor(Math.random()*(fieldSize[1]+1));
-    } while (obstX == Rover.x && obstY == Rover.y || field[obstX][obstY] == "X")
+    } while (obstX == Rover.x && obstY == Rover.y || obstX == Rover2.x && obstY == Rover2.y || field[obstX][obstY] == "X")
     field[obstX][obstY] = "X";
     console.log("Obstacle " +(i+1) + " coordinates: " + obstX + ", " + obstY + "\n")
   }
+}
+
+function renderer(str) {
+  switch (str) {
+    case "_":
+      return "<div class=\"square\"></div>";
+    case "X":
+      return "<div class=\"square\">X</div>";
+    case "N":
+      return "<div class=\"square\">N</div>";
+    case "E":
+      return "<div class=\"square\">E</div>";
+    case "S":
+      return "<div class=\"square\">S</div>";
+    case "W":
+      return "<div class=\"square\">W</div>";
+    case "N2":
+      return "<div class=\"square\">N<sup>2</sup></div>";
+    case "E2":
+      return "<div class=\"square\">E<sup>2</sup></div>";
+    case "S2":
+      return "<div class=\"square\">S<sup>2</sup></div>";
+    case "W2":
+      return "<div class=\"square\">W<sup>2</sup></div>";
+      
+  }
+
 }
 
 function createField(fSize) {
@@ -55,8 +89,12 @@ function createField(fSize) {
 
   // Here the position of the Rover will be rendered on the field.
   // ===========================
-    field[Rover.x][Rover.y] = "<u>" + Rover.direction + "</u>";
+    field[Rover.x][Rover.y] = Rover.direction;
+  // Here the position of the second Rover will be rendered on the field.
   // ===========================
+    field[Rover2.x][Rover2.y] = Rover2.direction + "2";
+  // ===========================
+
 
   createObstacles(document.getElementById("obst-num").value);
   
@@ -82,11 +120,11 @@ function createField(fSize) {
 
   var outputMat3 = "";
   for (t=0; t<= fSize[1]; t++) {
-    outputMat3 += "[";
+    outputMat3 += "";
     for (s=0; s<= fSize[0]; s++){
-      outputMat3 += " " + field[s][t] ;
+      outputMat3 += " " + renderer(field[s][t]) ;
     }
-    outputMat3 += " ]<br>";
+    outputMat3 += "<br class=\"defloat\">";
   }
 
   if (consoleLogSwitch) { 
@@ -103,7 +141,10 @@ function renderField(fSize) {
   
     // Here the position of the Rover will be rendered on the field.
   // ===========================
-    field[Rover.x][Rover.y] = "<u>" + Rover.direction + "</u>";
+    field[Rover.x][Rover.y] = Rover.direction ;
+  // Here the position of the second Rover will be rendered on the field.
+  // ===========================
+  field[Rover2.x][Rover2.y] = Rover2.direction + "2";
   // ===========================
   
   if (consoleLogSwitch) {
@@ -128,11 +169,11 @@ function renderField(fSize) {
 
   var outputMat3 = "";
   for (t=0; t<= fSize[1]; t++) {
-    outputMat3 += "[";
+    outputMat3 += "";
     for (s=0; s<= fSize[0]; s++){
-      outputMat3 += " " + field[s][t] ;
+      outputMat3 += " " + renderer(field[s][t]) ;
     }
-    outputMat3 += " ]<br>";
+    outputMat3 += "<br class=\"defloat\">";
   }
 
   if (consoleLogSwitch) { 
@@ -149,83 +190,83 @@ function turnRight(rover){
 
   switch (rover["direction"]) {
     case "N":
-      Rover["direction"] = "E";
+      rover["direction"] = "E";
       renderField(fieldSize);
       break;
     case "E":
-      Rover["direction"] = "S";
+      rover["direction"] = "S";
       renderField(fieldSize);
       break;
     case "S":
-      Rover["direction"] = "W";
+      rover["direction"] = "W";
       renderField(fieldSize);
       break;
     case "W":
-      Rover["direction"] = "N";
+      rover["direction"] = "N";
       renderField(fieldSize);
       break;
   }
 
-  console.log("New Rover Direction: " + Rover["direction"] );
-  Rover["travelLog"].push([Rover["direction"], Rover["x"], Rover["y"]]);
+  console.log("New Rover Direction: " + rover["direction"] );
+  rover["travelLog"].push([rover["direction"], rover["x"], rover["y"]]);
 }
 
 function turnLeft(rover){
 
   switch (rover["direction"]) {
     case "N":
-      Rover["direction"] = "W";
+      rover["direction"] = "W";
       renderField(fieldSize);
       break;
     case "E":
-      Rover["direction"] = "N";
+      rover["direction"] = "N";
       renderField(fieldSize);
       break;
     case "S":
-      Rover["direction"] = "E";
+      rover["direction"] = "E";
       renderField(fieldSize);
       break;
     case "W":
-      Rover["direction"] = "S";
+      rover["direction"] = "S";
       renderField(fieldSize);
       break;
   }
 
-  console.log("New Rover Direction: " + Rover["direction"] );
-  Rover["travelLog"].push([Rover["direction"], Rover["x"], Rover["y"]]);
+  console.log("New Rover Direction: " + rover["direction"] );
+  rover["travelLog"].push([rover["direction"], rover["x"], rover["y"]]);
 }
 
-function checkLimits(axis, sense, lowerLimit, upperLimit) {
+function checkLimits(rover, axis, sense, lowerLimit, upperLimit) {
   /* This functions takes the movement axis and a boolean parameter for the sense of movement: True = forward or False = backward.
      Then, both the upper and lower limits of the grid must be given (i.e.: 0 and 9).
      It returns true if a limit has been reached.*/
   
   if (sense == true) {
-    switch (Rover[axis]) {
+    switch (rover[axis]) {
       case lowerLimit:
-        if (Rover["direction"] == "W" || (Rover["direction"] == "N" )) {
-          console.log("field limit reached, cannot move further.\n\n\t" + Rover["travelLog"][Rover["travelLog"].length-1])
+        if (rover["direction"] == "W" || (rover["direction"] == "N" )) {
+          console.log("field limit reached, cannot move further.\n\n\t" + rover["travelLog"][rover["travelLog"].length-1])
           return true
         }
         break;
       case upperLimit:
-        if (Rover["direction"] == "E" || (Rover["direction"] == "S" )) {
-          console.log("field limit reached, cannot move further.\n\n\t" + Rover["travelLog"][Rover["travelLog"].length-1])
+        if (rover["direction"] == "E" || (rover["direction"] == "S" )) {
+          console.log("field limit reached, cannot move further.\n\n\t" + rover["travelLog"][rover["travelLog"].length-1])
           return true
         }
         break;
     }
   } else {
-    switch (Rover[axis]) {
+    switch (rover[axis]) {
       case upperLimit:
-        if (Rover["direction"] == "W" || (Rover["direction"] == "N" )) {
-          console.log("field limit reached, cannot move further.\n\n\t" + Rover["travelLog"][Rover["travelLog"].length-1])
+        if (rover["direction"] == "W" || (rover["direction"] == "N" )) {
+          console.log("field limit reached, cannot move further.\n\n\t" + rover["travelLog"][rover["travelLog"].length-1])
           return true
         }
         break;
       case lowerLimit:
-        if (Rover["direction"] == "E" || (Rover["direction"] == "S" )) {
-          console.log("field limit reached, cannot move further.\n\n\t" + Rover["travelLog"][Rover["travelLog"].length-1])
+        if (rover["direction"] == "E" || (rover["direction"] == "S" )) {
+          console.log("field limit reached, cannot move further.\n\n\t" + rover["travelLog"][rover["travelLog"].length-1])
           return true
         }
         break;
@@ -233,30 +274,30 @@ function checkLimits(axis, sense, lowerLimit, upperLimit) {
   } 
 }
 
-function checkObstacles(dir, sense) {
+function checkObstacles(rover, sense) {
   // parameters: --dir: string containing "N","E","S" or "W". --sense: boolean true --> forward sense.
 
   if (sense) {
-    switch (dir) {
+    switch (rover.direction) {
       case "N":
-        return field[Rover.x][Rover.y-1]=="X" ? true : false;
+        return field[rover.x][rover.y-1]=="X" ? true : false;
       case "E":
-        return field[Rover.x+1][Rover.y]=="X" ? true : false;
+        return field[rover.x+1][rover.y]=="X" ? true : false;
       case "S":
-        return field[Rover.x][Rover.y+1]=="X" ? true : false;
+        return field[rover.x][rover.y+1]=="X" ? true : false;
       case "W":
-        return field[Rover.x-1][Rover.y]=="X" ? true : false;
+        return field[rover.x-1][rover.y]=="X" ? true : false;
     }
   } else {
-    switch (dir) {
+    switch (rover.direction) {
       case "N":
-        return field[Rover.x][Rover.y+1]=="X" ? true : false;
+        return field[rover.x][rover.y+1]=="X" ? true : false;
       case "E":
-        return field[Rover.x-1][Rover.y]=="X" ? true : false;
+        return field[rover.x-1][rover.y]=="X" ? true : false;
       case "S":
-        return field[Rover.x][Rover.y-1]=="X" ? true : false;
+        return field[rover.x][rover.y-1]=="X" ? true : false;
       case "W":
-        return field[Rover.x+1][Rover.y]=="X" ? true : false;
+        return field[rover.x+1][rover.y]=="X" ? true : false;
     }
   }
 }
@@ -264,47 +305,47 @@ function checkObstacles(dir, sense) {
 function moveForward(rover){
 
   if (rover["direction"]=="W" || rover["direction"]=="E") {
-    if (checkLimits("x",true,0,fieldSize[0])){
+    if (checkLimits(rover,"x",true,0,fieldSize[0])){
       return;
     };  
   } else {
-    if (checkLimits("y",true,0,fieldSize[1])){
+    if (checkLimits(rover,"y",true,0,fieldSize[1])){
       return;
     };  
   }
 
   switch (rover["direction"]) {
     case "N":
-      if (!checkObstacles("N",true)){
-        field[Rover.x][Rover.y] = "_";
-        Rover["y"] -= 1;      
+      if (!checkObstacles(rover,true)){
+        field[rover.x][rover.y] = "_";
+        rover["y"] -= 1;      
         renderField(fieldSize);
       } else {
         console.log("cannot move forward: obstacle ahead");
       }
       break;
     case "E":
-      if (!checkObstacles("E",true)){
-        field[Rover.x][Rover.y] = "_";
-        Rover["x"] += 1;
+      if (!checkObstacles(rover,true)){
+        field[rover.x][rover.y] = "_";
+        rover["x"] += 1;
         renderField(fieldSize);
       } else {
         console.log("cannot move forward: obstacle ahead");
       }
       break;
     case "S":
-      if (!checkObstacles("S",true)){
-        field[Rover.x][Rover.y] = "_";
-        Rover["y"] += 1;
+      if (!checkObstacles(rover,true)){
+        field[rover.x][rover.y] = "_";
+        rover["y"] += 1;
         renderField(fieldSize);
       } else {
         console.log("cannot move forward: obstacle ahead");
       }
       break;
     case "W":
-      if (!checkObstacles("W",true)){
-        field[Rover.x][Rover.y] = "_";
-        Rover["x"] -= 1;
+      if (!checkObstacles(rover,true)){
+        field[rover.x][rover.y] = "_";
+        rover["x"] -= 1;
         renderField(fieldSize);
       } else {
         console.log("cannot move forward: obstacle ahead");
@@ -312,54 +353,54 @@ function moveForward(rover){
       break;
   }
   
-  console.log("Rover's new position>: [ " + Rover["x"] + ", " + Rover["y"] + "]");
-  Rover["travelLog"].push([Rover["direction"], Rover["x"], Rover["y"]]);
+  console.log("Rover's new position>: [ " + rover["x"] + ", " + rover["y"] + "]");
+  rover["travelLog"].push([rover["direction"], rover["x"], rover["y"]]);
 }
 
 function moveBackward(rover){
 
   if (rover["direction"]=="W" || rover["direction"]=="E") {
-    if (checkLimits("x",false,0,fieldSize[0])) {
+    if (checkLimits(rover,"x",false,0,fieldSize[0])) {
       return;
     };  
   } else {
-    if (checkLimits("y",false,0,fieldSize[1])) {
+    if (checkLimits(rover,"y",false,0,fieldSize[1])) {
       return;
     };  
   }
   
   switch (rover["direction"]) {
     case "N":
-      if (!checkObstacles("N",false)){
-        field[Rover.x][Rover.y] = "_";
-        Rover["y"] += 1;
+      if (!checkObstacles(rover,false)){
+        field[rover.x][rover.y] = "_";
+        rover["y"] += 1;
         renderField(fieldSize);
       } else {
         console.log("cannot move rearwards: obstacle behind");
       }
       break;
     case "E":
-      if (!checkObstacles("E",false)){
-        field[Rover.x][Rover.y] = "_";
-        Rover["x"] -= 1;
+      if (!checkObstacles(rover,false)){
+        field[rover.x][rover.y] = "_";
+        rover["x"] -= 1;
         renderField(fieldSize);
       } else {
         console.log("cannot move rearwards: obstacle behind");
       }
       break;
     case "S":
-      if (!checkObstacles("S",false)){
-        field[Rover.x][Rover.y] = "_";
-        Rover["y"] -= 1;
+      if (!checkObstacles(rover,false)){
+        field[rover.x][rover.y] = "_";
+        rover["y"] -= 1;
         renderField(fieldSize);
       } else {
         console.log("cannot move rearwards: obstacle behind");
       }
       break;
     case "W":
-    if (!checkObstacles("W",false)){
-      field[Rover.x][Rover.y] = "_";
-      Rover["x"] += 1;
+    if (!checkObstacles(rover,false)){
+      field[rover.x][rover.y] = "_";
+      rover["x"] += 1;
       renderField(fieldSize);
     } else {
       console.log("cannot move rearwards: obstacle behind");
@@ -367,8 +408,8 @@ function moveBackward(rover){
       break;
   }
   
-  console.log("Rover's new position>: [ " + Rover["x"] + ", " + Rover["y"] + "]");
-  Rover["travelLog"].push([Rover["direction"], Rover["x"], Rover["y"]]);
+  console.log("Rover's new position>: [ " + rover["x"] + ", " + rover["y"] + "]");
+  rover["travelLog"].push([rover["direction"], rover["x"], rover["y"]]);
 }
 
 function chainMoves(moves) {
@@ -412,20 +453,28 @@ function keyListener() {
 
   switch (key) {
     case "w":
-    case "ArrowUp":
       moveForward(Rover);
       break;
+    case "ArrowUp":
+      moveForward(Rover2);
+      break;
     case "s":
-    case "ArrowDown":
       moveBackward(Rover);
       break;
+    case "ArrowDown":
+      moveBackward(Rover2);
+      break;
     case "a":
-    case "ArrowLeft":
       turnLeft(Rover);
       break;
+    case "ArrowLeft":
+      turnLeft(Rover2);
+      break;
     case "d":
-    case "ArrowRight":
       turnRight(Rover);
+      break;
+    case "ArrowRight":
+      turnRight(Rover2);
       break;
     case "Enter":
       createFieldButton();
