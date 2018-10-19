@@ -54,21 +54,21 @@ function renderer(str) {
     case "X":
       return "<div class=\"square\">X</div>";
     case "N":
-      return "<div class=\"square\">N</div>";
+      return "<div class=\"square\" style=\"transform:rotate(-90deg)\">=></div>";
     case "E":
-      return "<div class=\"square\">E</div>";
+      return "<div class=\"square\">=></div>";
     case "S":
-      return "<div class=\"square\">S</div>";
+      return "<div class=\"square\" style=\"transform:rotate(-90deg)\"><=</div>";
     case "W":
-      return "<div class=\"square\">W</div>";
+      return "<div class=\"square\"><=</div>";
     case "N2":
-      return "<div class=\"square\">N<sup>2</sup></div>";
+      return "<div class=\"square\" style=\"transform:rotate(-90deg)\">|=></div>";
     case "E2":
-      return "<div class=\"square\">E<sup>2</sup></div>";
+      return "<div class=\"square\">|=></div>";
     case "S2":
-      return "<div class=\"square\">S<sup>2</sup></div>";
+      return "<div class=\"square\" style=\"transform:rotate(-90deg)\"><=|</div>";
     case "W2":
-      return "<div class=\"square\">W<sup>2</sup></div>";
+      return "<div class=\"square\"><=|</div>";
       
   }
 
@@ -280,24 +280,24 @@ function checkObstacles(rover, sense) {
   if (sense) {
     switch (rover.direction) {
       case "N":
-        return field[rover.x][rover.y-1]=="X" ? true : false;
+        return field[rover.x][rover.y-1]=="X" ? true : field[rover.x][rover.y-1]!="_" ? "rover" : false;
       case "E":
-        return field[rover.x+1][rover.y]=="X" ? true : false;
+        return field[rover.x+1][rover.y]=="X" ? true : field[rover.x+1][rover.y]!="_" ? "rover" : false;
       case "S":
-        return field[rover.x][rover.y+1]=="X" ? true : false;
+        return field[rover.x][rover.y+1]=="X" ? true : field[rover.x][rover.y+1]!="_" ? "rover" : false;
       case "W":
-        return field[rover.x-1][rover.y]=="X" ? true : false;
+        return field[rover.x-1][rover.y]=="X" ? true : field[rover.x-1][rover.y]!="_" ? "rover" : false;
     }
   } else {
     switch (rover.direction) {
       case "N":
-        return field[rover.x][rover.y+1]=="X" ? true : false;
+        return field[rover.x][rover.y+1]=="X" ? true : field[rover.x][rover.y+1]!="_" ? "rover" : false;
       case "E":
-        return field[rover.x-1][rover.y]=="X" ? true : false;
+        return field[rover.x-1][rover.y]=="X" ? true : field[rover.x-1][rover.y]!="_" ? "rover" : false;
       case "S":
-        return field[rover.x][rover.y-1]=="X" ? true : false;
+        return field[rover.x][rover.y-1]=="X" ? true : field[rover.x][rover.y-1]!="_" ? "rover" : false;
       case "W":
-        return field[rover.x+1][rover.y]=="X" ? true : false;
+        return field[rover.x+1][rover.y]=="X" ? true : field[rover.x+1][rover.y]!="_" ? "rover" : false;
     }
   }
 }
@@ -320,6 +320,8 @@ function moveForward(rover){
         field[rover.x][rover.y] = "_";
         rover["y"] -= 1;      
         renderField(fieldSize);
+      } else if (checkObstacles(rover,true)=="rover"){
+        console.log("cannot move forward: rover ahead")
       } else {
         console.log("cannot move forward: obstacle ahead");
       }
@@ -329,6 +331,8 @@ function moveForward(rover){
         field[rover.x][rover.y] = "_";
         rover["x"] += 1;
         renderField(fieldSize);
+      } else if (checkObstacles(rover,true)=="rover"){
+        console.log("cannot move forward: rover ahead")
       } else {
         console.log("cannot move forward: obstacle ahead");
       }
@@ -338,6 +342,8 @@ function moveForward(rover){
         field[rover.x][rover.y] = "_";
         rover["y"] += 1;
         renderField(fieldSize);
+      } else if (checkObstacles(rover,true)=="rover"){
+        console.log("cannot move forward: rover ahead")
       } else {
         console.log("cannot move forward: obstacle ahead");
       }
@@ -347,6 +353,8 @@ function moveForward(rover){
         field[rover.x][rover.y] = "_";
         rover["x"] -= 1;
         renderField(fieldSize);
+      } else if (checkObstacles(rover,true)=="rover"){
+        console.log("cannot move forward: rover ahead")
       } else {
         console.log("cannot move forward: obstacle ahead");
       }
@@ -375,6 +383,8 @@ function moveBackward(rover){
         field[rover.x][rover.y] = "_";
         rover["y"] += 1;
         renderField(fieldSize);
+      } else if (checkObstacles(rover,false)=="rover"){
+        console.log("cannot move backwards: rover behind")
       } else {
         console.log("cannot move rearwards: obstacle behind");
       }
@@ -384,6 +394,8 @@ function moveBackward(rover){
         field[rover.x][rover.y] = "_";
         rover["x"] -= 1;
         renderField(fieldSize);
+      } else if (checkObstacles(rover,false)=="rover"){
+        console.log("cannot move backwards: rover behind")
       } else {
         console.log("cannot move rearwards: obstacle behind");
       }
@@ -393,18 +405,22 @@ function moveBackward(rover){
         field[rover.x][rover.y] = "_";
         rover["y"] -= 1;
         renderField(fieldSize);
+      } else if (checkObstacles(rover,false)=="rover"){
+        console.log("cannot move backwards: rover behind")
       } else {
         console.log("cannot move rearwards: obstacle behind");
       }
       break;
     case "W":
-    if (!checkObstacles(rover,false)){
-      field[rover.x][rover.y] = "_";
-      rover["x"] += 1;
-      renderField(fieldSize);
-    } else {
-      console.log("cannot move rearwards: obstacle behind");
-    }      
+      if (!checkObstacles(rover,false)){
+        field[rover.x][rover.y] = "_";
+        rover["x"] += 1;
+        renderField(fieldSize);
+      } else if (checkObstacles(rover,false)=="rover"){
+        console.log("cannot move backwards: rover behind")
+      } else {
+        console.log("cannot move rearwards: obstacle behind");
+      }      
       break;
   }
   

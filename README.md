@@ -13,7 +13,7 @@ Exercise Status:
             from rendering.             complete
 
     -Bonus - Obstacles (randomize)      complete
-    -Bonus - Other Rovers               not begun
+    -Bonus - Other Rovers (2nd rover)   complete
 
     -Extra - Graphical Display          text-based
     -Extra - UI Controls                complete
